@@ -1,10 +1,10 @@
 // Zentrale Datenbasis für den Führungskräfte-Guide.
-// Stand: manuell aus dem korrigierten Trainingskatalog-Abgleich übernommen (17.08.2026).
 //
-// TODO (Option B / Live-Daten): Diese Datei durch einen fetch() gegen das
-// Trainingskatalog-Sheet bzw. eine Notion-DB ersetzen, sobald Tobi die
-// Anbindung (Google Sheets API vs. Notion API) eingerichtet hat. Struktur
-// unten 1:1 beibehalten, damit render.js unverändert funktioniert.
+// Die `trainings`-Arrays je Kategorie sind der Offline-Fallback (Stand
+// 17.08.2026, manuell gegen den Trainingskatalog abgeglichen). Beim Laden
+// ersetzt app.js sie pro Kategorie durch aktuelle Daten aus der ARLO Public
+// API (siehe fetchArloTrainings() in app.js) – nur wenn der Live-Abruf für
+// eine Kategorie fehlschlägt oder leer bleibt, greift dieser Fallback.
 
 const CATEGORIES = [
   {

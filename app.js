@@ -45,6 +45,76 @@ function goToSlide(index) {
   document.getElementById("progress-fill").style.width = `${((index + 1) / totalSlides) * 100}%`;
 }
 
+// ---------- Live-Trainingsdaten (ARLO Public API) ----------
+const ARLO_PLATFORM = "lotaro-mvp";
+const ARLO_EVENTSEARCH_URL = `https://${ARLO_PLATFORM}.arlo.co/api/2012-02-01/pub/resources/eventsearch/`;
+
+// Arlo-Kategoriename -> Kategorie-ID in CATEGORIES
+const ARLO_CATEGORY_MAP = {
+  Communication: "kommunikation",
+  Leadership: "leadership",
+  "AI Skills": "ai-skills",
+  "Mental Health": "mental-health",
+  "Personal Development": "persoenliche-entwicklung",
+  Productivity: "produktivitaet",
+  "Sales & Negotiation": "sales-verhandlungen",
+};
+
+// Arlo führt jedes Training doppelt (DE/EN), erkennbar am Code-Suffix
+// (z.B. "PROMGER-018" vs. "PROMENG-009"). Der Guide ist deutschsprachig,
+// also nur die GER-Variante übernehmen.
+function isGermanEvent(event) {
+  return /GER-\d+$/.test(event.Code || "");
+}
+
+async function fetchArloTrainings() {
+  const trainingsByCategory = {};
+  let skip = 0;
+  const pageSize = 100;
+
+  for (let page = 0; page < 5; page++) {
+    const url = `${ARLO_EVENTSEARCH_URL}?format=json&top=${pageSize}&skip=${skip}&fields=Name,Code,Presenters,Categories`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Arlo API ${res.status}`);
+    const data = await res.json();
+    const items = data.Items || [];
+
+    for (const event of items) {
+      if (!isGermanEvent(event)) continue;
+      const arloCategory = event.Categories?.[0]?.Name;
+      const categoryId = ARLO_CATEGORY_MAP[arloCategory];
+      if (!categoryId) continue;
+
+      const list = (trainingsByCategory[categoryId] ??= new Map());
+      if (!list.has(event.Name)) {
+        const trainer = (event.Presenters || []).map((p) => p.Name).join(" & ") || "—";
+        list.set(event.Name, { title: event.Name, trainer });
+      }
+    }
+
+    if (items.length < pageSize) break;
+    skip += pageSize;
+  }
+
+  return trainingsByCategory;
+}
+
+async function loadLiveTrainings() {
+  try {
+    const trainingsByCategory = await fetchArloTrainings();
+    for (const cat of CATEGORIES) {
+      const live = trainingsByCategory[cat.id];
+      if (live && live.size > 0) {
+        cat.trainings = [...live.values()].sort((a, b) => a.title.localeCompare(b.title, "de"));
+      }
+    }
+    renderMatrix();
+    if (window.lucide) lucide.createIcons();
+  } catch (err) {
+    console.warn("Arlo-Live-Daten nicht verfügbar, zeige Offline-Fallback:", err);
+  }
+}
+
 // ---------- Guide / Matrix (aus data.js) ----------
 function renderLeitfaden() {
   const el = document.getElementById("leitfaden-list");
@@ -114,4 +184,5 @@ document.addEventListener("DOMContentLoaded", () => {
   renderObjections();
   renderReview();
   if (window.lucide) lucide.createIcons();
+  loadLiveTrainings();
 });
