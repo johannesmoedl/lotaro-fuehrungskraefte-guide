@@ -73,7 +73,7 @@ async function fetchArloTrainings() {
   const pageSize = 100;
 
   for (let page = 0; page < 5; page++) {
-    const url = `${ARLO_EVENTSEARCH_URL}?format=json&top=${pageSize}&skip=${skip}&fields=Name,Code,Presenters,Categories`;
+    const url = `${ARLO_EVENTSEARCH_URL}?format=json&top=${pageSize}&skip=${skip}&fields=Name,Code,Presenters,Categories,ViewUri,EventID`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Arlo API ${res.status}`);
     const data = await res.json();
@@ -88,7 +88,13 @@ async function fetchArloTrainings() {
       const list = (trainingsByCategory[categoryId] ??= new Map());
       if (!list.has(event.Name)) {
         const trainer = (event.Presenters || []).map((p) => p.Name).join(" & ") || "—";
-        list.set(event.Name, { title: event.Name, trainer });
+        // ViewUri zeigt auf die allgemeine Kursseite (/courses/{slug}); der
+        // Trainingskatalog verlinkt Trainings konkret auf /w/events/{slug}/{EventID}
+        // – dort landet man direkt bei diesem Training samt Terminen & Buchung.
+        const catalogUrl = event.ViewUri
+          ? `${event.ViewUri.replace("/courses/", "/w/events/")}/${event.EventID}`
+          : null;
+        list.set(event.Name, { title: event.Name, trainer, url: catalogUrl });
       }
     }
 
@@ -146,7 +152,14 @@ function renderMatrix() {
         <div class="loesung"><div class="label">Mehr</div><div>${cat.loesung}</div></div>
       </div>
       <ul class="training-list">
-        ${cat.trainings.map((t) => `<li><span>${t.title}</span><span class="trainer">${t.trainer}</span></li>`).join("")}
+        ${cat.trainings
+          .map(
+            (t) => `<li>
+              ${t.url ? `<a href="${t.url}" target="_blank" rel="noopener">${t.title}</a>` : `<span>${t.title}</span>`}
+              <span class="trainer">${t.trainer}</span>
+            </li>`
+          )
+          .join("")}
       </ul>
     </div>`
   ).join("");
