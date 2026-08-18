@@ -204,8 +204,27 @@ function renderReview() {
 }
 
 // ---------- PDF-Export ----------
+// In einem eingebetteten iFrame (z.B. Notion /embed) ist der Browser meist
+// "sandboxed" und blockiert window.print() lautlos (kein Fehler, nichts
+// passiert). Deshalb dort in einem neuen, nicht-sandboxed Tab öffnen und den
+// Druckdialog dort automatisch auslösen (?autoprint=1, siehe unten).
 function initPdfExport() {
-  document.getElementById("pdf-download-btn")?.addEventListener("click", () => window.print());
+  document.getElementById("pdf-download-btn")?.addEventListener("click", () => {
+    if (window.self !== window.top) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("autoprint", "1");
+      window.open(url.toString(), "_blank");
+    } else {
+      window.print();
+    }
+  });
+}
+
+function initAutoPrint() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("autoprint") !== "1") return;
+  window.history.replaceState({}, "", window.location.pathname);
+  window.addEventListener("load", () => setTimeout(() => window.print(), 300));
 }
 
 // ---------- Init ----------
@@ -213,6 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initTabs();
   initSlideshow();
   initPdfExport();
+  initAutoPrint();
   renderLeitfaden();
   renderMatrix();
   renderObjections();
