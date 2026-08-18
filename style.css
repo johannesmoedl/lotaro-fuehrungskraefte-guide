@@ -242,16 +242,28 @@ footer.guide-footer { text-align: center; padding: var(--space-8) 0; color: var(
 [data-lucide] { width: 20px; height: 20px; }
 
 /* ---------- Print / PDF-Export ---------- */
+/* Druckt nur den gerade aktiven Tab: bei "Warum & Haltung" die komplette
+   Foliensammlung nacheinander, bei "Leitfaden & Matrix" die Guide-Seite. */
 @media print {
   .no-print { display: none !important; }
 
   body { background: var(--accent); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #slideshow-view { min-height: 0; }
 
-  .view { display: block !important; }
-  .slide { display: block !important; padding-bottom: var(--space-7); margin-bottom: var(--space-6); border-bottom: 1px solid var(--border); }
-  .slide:last-child { border-bottom: none; }
+  /* Die fadeIn-Animation der Folien startet beim Sichtbarwerden neu — der
+     Druck-Snapshot erfasst sie sonst mitten in der Animation (opacity: 0),
+     dadurch wirken Seiten leer. Deshalb hier deaktivieren. */
+  #slideshow-view.active .slide {
+    display: block !important;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    padding-bottom: var(--space-7);
+    margin-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border);
+  }
+  #slideshow-view.active .slide:last-child { border-bottom: none; }
   .slide-wrap { padding-top: var(--space-4); }
 
-  #guide-view { break-before: page; }
   .card, .matrix-card, .step-item, .objection-card { break-inside: avoid; }
 }
