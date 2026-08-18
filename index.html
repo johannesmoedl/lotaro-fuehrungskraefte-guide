@@ -11,13 +11,16 @@
 </head>
 <body>
 
-<header class="site-header">
+<header class="site-header no-print">
   <div class="container">
     <div class="logo">LOTARO</div>
-    <nav class="tabs">
-      <button class="tab-btn active" data-target="slideshow-view">Warum & Haltung</button>
-      <button class="tab-btn" data-target="guide-view">Wie & Leitfaden</button>
-    </nav>
+    <div class="header-actions">
+      <nav class="tabs">
+        <button class="tab-btn active" data-target="slideshow-view">Warum & Haltung</button>
+        <button class="tab-btn" data-target="guide-view">Leitfaden & Matrix</button>
+      </nav>
+      <button class="btn-pdf" id="pdf-download-btn" type="button"><i data-lucide="download"></i> Als PDF</button>
+    </div>
   </div>
 </header>
 
@@ -25,7 +28,7 @@
 <section id="slideshow-view" class="view active">
   <div class="slide-wrap">
 
-    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-track no-print"><div class="progress-fill" id="progress-fill"></div></div>
 
     <!-- Slide 1: Titel -->
     <div class="slide active">
@@ -279,7 +282,7 @@
       <p style="margin-top: 32px;">Plattform: platform.lotaro.de<br>Einstiegsguide: im Tab „Leitfaden & Matrix" oben</p>
     </div>
 
-    <div class="nav-row">
+    <div class="nav-row no-print">
       <button class="btn btn-ghost" id="prev-slide"><i data-lucide="arrow-left"></i> Zurück</button>
       <span class="slide-counter"><span id="slide-current">1</span> / <span id="slide-total">15</span></span>
       <button class="btn btn-primary" id="next-slide">Weiter <i data-lucide="arrow-right"></i></button>

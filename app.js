@@ -203,10 +203,16 @@ function renderReview() {
   ).join("");
 }
 
+// ---------- PDF-Export ----------
+function initPdfExport() {
+  document.getElementById("pdf-download-btn")?.addEventListener("click", () => window.print());
+}
+
 // ---------- Init ----------
 document.addEventListener("DOMContentLoaded", () => {
   initTabs();
   initSlideshow();
+  initPdfExport();
   renderLeitfaden();
   renderMatrix();
   renderObjections();

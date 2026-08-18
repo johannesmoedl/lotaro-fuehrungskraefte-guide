@@ -69,6 +69,7 @@ small, .caption { font-size: 12px; text-transform: uppercase; letter-spacing: 0.
   font-weight: 700; font-size: 20px; letter-spacing: 0.02em;
   color: var(--primary); text-transform: uppercase;
 }
+.header-actions { display: flex; align-items: center; gap: var(--space-4); }
 .tabs { display: flex; gap: var(--space-2); }
 .tab-btn {
   font-family: var(--font-base); font-size: 14px; font-weight: 600;
@@ -78,6 +79,16 @@ small, .caption { font-size: 12px; text-transform: uppercase; letter-spacing: 0.
 }
 .tab-btn:hover { background: var(--primary-faint); color: var(--primary-dark); }
 .tab-btn.active { background: var(--primary); color: #fff; }
+
+.btn-pdf {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  font-family: var(--font-base); font-size: 14px; font-weight: 600;
+  color: var(--fg-2); background: transparent; border: 1px solid var(--border);
+  padding: var(--space-2) var(--space-4); border-radius: var(--radius-pill);
+  cursor: pointer; transition: background 150ms var(--ease-standard), color 150ms var(--ease-standard), border-color 150ms var(--ease-standard);
+}
+.btn-pdf:hover { background: var(--primary-faint); color: var(--primary-dark); border-color: var(--primary-light); }
+.btn-pdf [data-lucide] { width: 16px; height: 16px; }
 
 .view { display: none; }
 .view.active { display: block; }
@@ -229,3 +240,18 @@ section.guide-section { margin-bottom: var(--space-9); }
 footer.guide-footer { text-align: center; padding: var(--space-8) 0; color: var(--fg-3); font-size: 14px; }
 
 [data-lucide] { width: 20px; height: 20px; }
+
+/* ---------- Print / PDF-Export ---------- */
+@media print {
+  .no-print { display: none !important; }
+
+  body { background: var(--accent); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .view { display: block !important; }
+  .slide { display: block !important; padding-bottom: var(--space-7); margin-bottom: var(--space-6); border-bottom: 1px solid var(--border); }
+  .slide:last-child { border-bottom: none; }
+  .slide-wrap { padding-top: var(--space-4); }
+
+  #guide-view { break-before: page; }
+  .card, .matrix-card, .step-item, .objection-card { break-inside: avoid; }
+}
