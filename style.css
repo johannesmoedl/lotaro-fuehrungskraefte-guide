@@ -202,10 +202,17 @@ section.guide-section { margin-bottom: var(--space-9); }
 .problem-loesung .problem .label { color: var(--error); }
 .problem-loesung .loesung .label { color: var(--primary); }
 .training-list { list-style: none; padding: 0; margin: var(--space-2) 0 0; display: flex; flex-direction: column; gap: var(--space-2); border-top: 1px solid var(--border); padding-top: var(--space-3); }
-.training-list li { font-size: 14px; display: flex; justify-content: space-between; gap: var(--space-2); }
+.training-list li { font-size: 14px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2) var(--space-3); }
+.training-list .training-title { flex: 1 1 auto; min-width: 140px; }
+.training-list .training-meta { display: flex; align-items: center; gap: var(--space-3); flex-shrink: 0; }
 .training-list .trainer { color: var(--fg-3); flex-shrink: 0; }
 .training-list a { color: var(--fg-1); text-decoration: none; border-bottom: 1px solid var(--primary-light); transition: color var(--ease-standard) 0.15s, border-color var(--ease-standard) 0.15s; }
 .training-list a:hover { color: var(--primary); border-color: var(--primary); }
+
+.status-pill { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; padding: 2px var(--space-3); border-radius: var(--radius-pill); white-space: nowrap; }
+.status-pill.status-open { background: var(--primary-faint); color: var(--primary-dark); }
+.status-pill.status-low { background: rgba(184, 134, 11, 0.14); color: var(--warning); }
+.status-pill.status-full { background: rgba(192, 57, 43, 0.1); color: var(--error); }
 
 .objection-grid { display: flex; flex-direction: column; gap: var(--space-4); }
 .objection-card .einwand { font-weight: 600; color: var(--accent-text); margin-bottom: var(--space-3); font-size: 16px; }

@@ -67,13 +67,23 @@ function isGermanEvent(event) {
   return /GER-\d+$/.test(event.Code || "");
 }
 
+const LOW_PLACES_THRESHOLD = 3;
+
+function arloAvailability(event) {
+  if (event.IsFull) return { label: "Ausgebucht", cls: "full" };
+  if (typeof event.PlacesRemaining === "number" && event.PlacesRemaining <= LOW_PLACES_THRESHOLD) {
+    return { label: "Wenige Plätze frei", cls: "low" };
+  }
+  return { label: "Plätze frei", cls: "open" };
+}
+
 async function fetchArloTrainings() {
   const trainingsByCategory = {};
   let skip = 0;
   const pageSize = 100;
 
   for (let page = 0; page < 5; page++) {
-    const url = `${ARLO_EVENTSEARCH_URL}?format=json&top=${pageSize}&skip=${skip}&fields=Name,Code,Presenters,Categories,ViewUri,EventID`;
+    const url = `${ARLO_EVENTSEARCH_URL}?format=json&top=${pageSize}&skip=${skip}&fields=Name,Code,Presenters,Categories,ViewUri,EventID,IsFull,PlacesRemaining`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Arlo API ${res.status}`);
     const data = await res.json();
@@ -94,7 +104,7 @@ async function fetchArloTrainings() {
         const catalogUrl = event.ViewUri
           ? `${event.ViewUri.replace("/courses/", "/w/events/")}/${event.EventID}`
           : null;
-        list.set(event.Name, { title: event.Name, trainer, url: catalogUrl });
+        list.set(event.Name, { title: event.Name, trainer, url: catalogUrl, status: arloAvailability(event) });
       }
     }
 
@@ -155,8 +165,13 @@ function renderMatrix() {
         ${cat.trainings
           .map(
             (t) => `<li>
-              ${t.url ? `<a href="${t.url}" target="_blank" rel="noopener">${t.title}</a>` : `<span>${t.title}</span>`}
-              <span class="trainer">${t.trainer}</span>
+              <div class="training-title">
+                ${t.url ? `<a href="${t.url}" target="_blank" rel="noopener">${t.title}</a>` : `<span>${t.title}</span>`}
+              </div>
+              <div class="training-meta">
+                ${t.status ? `<span class="status-pill status-${t.status.cls}">${t.status.label}</span>` : ""}
+                <span class="trainer">${t.trainer}</span>
+              </div>
             </li>`
           )
           .join("")}
