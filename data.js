@@ -151,7 +151,7 @@ const GESPRAECHSLEITFADEN = [
     step: 2,
     title: "Perspektive erweitern",
     frage: "Welche eine Fähigkeit würde dich dabei unterstützen, deine fachliche Kompetenz noch wirksamer werden zu lassen?",
-    optional: "Was würden Kolleg:innen vermutlich sagen: Worin bist du verlässlich stark – und wo könntest du noch souveräner wirken?",
+    optional: "Was würden Kollegen vermutlich sagen: Worin bist du verlässlich stark – und wo könntest du noch souveräner wirken?",
   },
   {
     step: 3,
@@ -163,7 +163,6 @@ const GESPRAECHSLEITFADEN = [
     step: 4,
     title: "Interesse berücksichtigen",
     frage: "Wenn du einen Themenbereich frei wählen könntest: Welcher reizt dich am meisten?",
-    optional: "Nutze die Trainings-Matrix zur Orientierung.",
   },
   {
     step: 5,
