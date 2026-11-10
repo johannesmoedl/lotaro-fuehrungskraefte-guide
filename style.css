@@ -246,10 +246,14 @@ footer.guide-footer { text-align: center; padding: var(--space-8) 0; color: var(
    Matrix aus (Hero, Gesprächsleitfaden, Einwandbehandlung, Review, Zitat-
    Karte, Footer). Da diese Elemente dadurch auch beim PDF-Export (per
    window.print()) nicht mitgedruckt werden, bleibt "Als PDF" nutzbar und
-   exportiert dann automatisch nur die Matrix. */
+   exportiert dann automatisch nur die Matrix.
+   Zusätzlich verschwindet die Tab-Navigation selbst (es gibt in dieser
+   Variante ohnehin nur einen Inhalt, kein Umschalten nötig) – "Warum &
+   Haltung" bleibt dadurch auch unerreichbar. Logo und PDF-Button bleiben. */
 body.matrix-only #guide-view .guide-hero,
 body.matrix-only #guide-view .guide-section:not(.matrix-only-section),
-body.matrix-only #guide-view .guide-footer {
+body.matrix-only #guide-view .guide-footer,
+body.matrix-only .site-header .tabs {
   display: none !important;
 }
 
