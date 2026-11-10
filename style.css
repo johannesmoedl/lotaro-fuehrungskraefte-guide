@@ -244,16 +244,15 @@ footer.guide-footer { text-align: center; padding: var(--space-8) 0; color: var(
 /* ---------- Matrix-only-Variante (isolierter #matrix-Deep-Link) ---------- */
 /* Blendet im "Leitfaden & Matrix"-Tab alles außer der Trainings-Mapping-
    Matrix aus (Hero, Gesprächsleitfaden, Einwandbehandlung, Review, Zitat-
-   Karte, Footer). Da diese Elemente dadurch auch beim PDF-Export (per
-   window.print()) nicht mitgedruckt werden, bleibt "Als PDF" nutzbar und
-   exportiert dann automatisch nur die Matrix.
-   Zusätzlich verschwindet die Tab-Navigation selbst (es gibt in dieser
-   Variante ohnehin nur einen Inhalt, kein Umschalten nötig) – "Warum &
-   Haltung" bleibt dadurch auch unerreichbar. Logo und PDF-Button bleiben. */
+   Karte, Footer). Die Tab-Navigation selbst verschwindet ebenfalls (es gibt
+   in dieser Variante ohnehin nur einen Inhalt, kein Umschalten nötig) –
+   "Warum & Haltung" bleibt dadurch auch unerreichbar. Der PDF-Button
+   entfällt hier ebenfalls. Nur Logo und Matrix bleiben übrig. */
 body.matrix-only #guide-view .guide-hero,
 body.matrix-only #guide-view .guide-section:not(.matrix-only-section),
 body.matrix-only #guide-view .guide-footer,
-body.matrix-only .site-header .tabs {
+body.matrix-only .site-header .tabs,
+body.matrix-only .site-header .btn-pdf {
   display: none !important;
 }
 
