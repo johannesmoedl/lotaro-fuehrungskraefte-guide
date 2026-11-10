@@ -229,9 +229,13 @@ function initAutoPrint() {
 
 // ---------- Deep-Link auf einen Tab (z.B. #matrix) ----------
 // Erlaubt einen direkten Link/Embed, der sofort auf einem bestimmten Tab
-// öffnet statt immer auf "Warum & Haltung" zu starten. Bisher nur
-// "#matrix" -> "Leitfaden & Matrix"-Tab (enthält auch den Gesprächsleitfaden
-// und die Einwandbehandlung, da diese auf derselben View liegen).
+// öffnet statt immer auf "Warum & Haltung" zu starten.
+// "#guide"  -> kompletter "Leitfaden & Matrix"-Tab (wie beim normalen Klick).
+// "#matrix" -> derselbe Tab, aber nur der Abschnitt Trainings-Mapping-Matrix
+//              ist sichtbar (für isolierte Embeds, z.B. in Notion). Die
+//              übrigen Abschnitte werden per "matrix-only"-Klasse auf <body>
+//              ausgeblendet (siehe style.css) – das greift auch beim
+//              PDF-Export, der dadurch automatisch nur die Matrix druckt.
 const HASH_TAB_TARGETS = {
   matrix: "guide-view",
   guide: "guide-view",
@@ -251,6 +255,7 @@ function initHashDeepLink() {
     const key = window.location.hash.replace("#", "").toLowerCase();
     const targetId = HASH_TAB_TARGETS[key];
     if (targetId) activateTab(targetId);
+    document.body.classList.toggle("matrix-only", key === "matrix");
   };
   applyHash();
   window.addEventListener("hashchange", applyHash);
