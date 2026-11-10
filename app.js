@@ -227,12 +227,42 @@ function initAutoPrint() {
   window.addEventListener("load", () => setTimeout(() => window.print(), 300));
 }
 
+// ---------- Deep-Link auf einen Tab (z.B. #matrix) ----------
+// Erlaubt einen direkten Link/Embed, der sofort auf einem bestimmten Tab
+// öffnet statt immer auf "Warum & Haltung" zu starten. Bisher nur
+// "#matrix" -> "Leitfaden & Matrix"-Tab (enthält auch den Gesprächsleitfaden
+// und die Einwandbehandlung, da diese auf derselben View liegen).
+const HASH_TAB_TARGETS = {
+  matrix: "guide-view",
+  guide: "guide-view",
+};
+
+function activateTab(targetId) {
+  document.querySelectorAll(".tab-btn").forEach((b) => {
+    b.classList.toggle("active", b.dataset.target === targetId);
+  });
+  document.querySelectorAll(".view").forEach((v) => {
+    v.classList.toggle("active", v.id === targetId);
+  });
+}
+
+function initHashDeepLink() {
+  const applyHash = () => {
+    const key = window.location.hash.replace("#", "").toLowerCase();
+    const targetId = HASH_TAB_TARGETS[key];
+    if (targetId) activateTab(targetId);
+  };
+  applyHash();
+  window.addEventListener("hashchange", applyHash);
+}
+
 // ---------- Init ----------
 document.addEventListener("DOMContentLoaded", () => {
   initTabs();
   initSlideshow();
   initPdfExport();
   initAutoPrint();
+  initHashDeepLink();
   renderLeitfaden();
   renderMatrix();
   renderObjections();
